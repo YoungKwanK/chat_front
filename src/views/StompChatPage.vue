@@ -38,6 +38,7 @@ import Stomp from 'webstomp-client';
         messages: [],
         newMessage: "",
         stompClient: null,
+        token: ""
       }
     },
     created(){
@@ -51,8 +52,10 @@ import Stomp from 'webstomp-client';
         // sockjs는 websocket을 내장한 향상된 js 라이브러리. http엔드포인트 사용.
         const sockJs = new SockJS(`${process.env.VUE_APP_API_BASE_URL}/connect`)
         this.stompClient = Stomp.over(sockJs);
-
-        this.stompClient.connect({},
+        this.token = localStorage.getItem("token");
+        this.stompClient.connect({
+          Authorization: `Bearer ${this.token}`
+        },
           ()=>{
             this.stompClient.subscribe(`/topic/1`, (message=>{
               this.messages.push(message.body);
