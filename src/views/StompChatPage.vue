@@ -57,7 +57,7 @@ import axios from 'axios';
       this.disconnectWebSocket();
       next();
     },
-    // 화면을 완전히 꺼버렸응ㄹ 때  
+    // 화면을 완전히 꺼버렸을 때  
     beforeUnmount(){
       this.disconnectWebSocket();
     },  
@@ -95,7 +95,8 @@ import axios from 'axios';
         chatBox.scrollTop = chatBox.scrollHeight;
       })
     },
-    disconnectWebSocket(){
+    async disconnectWebSocket(){
+      await axios.post(`${process.env.VUE_APP_API_BASE_URL}/chat/room/${this.roomId}/read`)
       if(this.stompClient && this.stompClient.connected){
         this.stompClient.unsubscribe(`/topic/${this.roomId}`);
         this.stompClient.disconnect();
